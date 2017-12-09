@@ -10,6 +10,7 @@ It's composed of three different layers:
 
 The watchdog driver makes available in the procfs the corresponding </br>
 device file to make the link between the hardware and userspace. </br>
+
 By default, the device file is located in /dev/watchdog.
 
 ### watchdogd:

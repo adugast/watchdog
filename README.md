@@ -8,7 +8,7 @@ It's composed of three different layers:
 2. watchdog driver (kernel)
 3. watchdog daemon (userspace)
 
-The watchdog driver makes available in the procfs the corresponding
+The watchdog driver makes available in the procfs the corresponding </br>
 device file to make the link between the hardware and userspace. </br>
 By default, the device file is located in /dev/watchdog.
 
@@ -20,7 +20,7 @@ By default, the device file is located in /dev/watchdog.
   Each write delays the reboot time another minute.
 
 + If a system issue occurs (process table full, not enough free memory,
-  temperature too high, file table overflow, ...) describes in man (8).
+  temperature too high, file table overflow, ...) describes in man (8) wdctl.
   The watchdog the daemon will stop writing to the device file.
 
 + After a minute of inactivity the watchdog hardware will cause the reset.

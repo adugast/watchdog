@@ -50,7 +50,7 @@
 
 #define WATCHDOG_PATHNAME "/dev/watchdog"
 
-#define err(format, ...) \
+#define print_err(format, ...) \
     fprintf(stderr, format, __VA_ARGS__)
 
 
@@ -60,7 +60,7 @@ static int get_watchdog_fd(void)
 
     fd = open(WATCHDOG_PATHNAME, O_RDWR);
     if (fd == -1) {
-        err("Unable to open %s: %s.\n", WATCHDOG_PATHNAME, strerror(errno));
+        print_err("Unable to open %s: %s.\n", WATCHDOG_PATHNAME, strerror(errno));
         return -1;
     }
 
@@ -80,35 +80,35 @@ static int watchdog(int fd)
     if (ioctl(fd, WDIOC_GETSUPPORT, &ident) == 0) {
         printf("Identity:\t%s [version %d]\n", ident.identity, ident.firmware_version);
     } else {
-        err("Error: Cannot read watchdog identity: %s\n", strerror(errno));
+        print_err("Error: Cannot read watchdog identity: %s\n", strerror(errno));
     }
 
     /* Display current watchdog timeout */
     if (ioctl(fd, WDIOC_GETTIMEOUT, &timeout) == 0) {
         printf("Timeout: \t%d seconds\n", timeout);
     } else {
-        err("Error: Cannot read watchdog timeout: %s\n", strerror(errno));
+        print_err("Error: Cannot read watchdog timeout: %s\n", strerror(errno));
     }
 
     /* Display current watchdog pre-timeout */
     if (ioctl(fd, WDIOC_GETPRETIMEOUT, &pretimeout) == 0) {
         printf("Pre-timeout: \t%d seconds\n", pretimeout);
     } else {
-        err("Error: Cannot read watchdog pretimeout: %s\n", strerror(errno));
+        print_err("Error: Cannot read watchdog pretimeout: %s\n", strerror(errno));
     }
 
     /* Display current watchdog timeleft */
     if (ioctl(fd, WDIOC_GETTIMELEFT, &timeleft) == 0) {
         printf("Timeleft: \t%d seconds\n", timeleft);
     } else {
-        err("Error: Cannot read watchdog timeleft: %s\n", strerror(errno));
+        print_err("Error: Cannot read watchdog timeleft: %s\n", strerror(errno));
     }
 
     /* Check if last boot is caused by watchdog */
     if (ioctl(fd, WDIOC_GETBOOTSTATUS, &bootstatus) == 0) {
         printf("Last boot: \t%s\n", (bootstatus != 0) ? "Watchdog" : "Power-On-Reset");
     } else {
-        err("Error: Cannot read watchdog boot status: %s\n", strerror(errno));
+        print_err("Error: Cannot read watchdog boot status: %s\n", strerror(errno));
     }
 
     return 0;

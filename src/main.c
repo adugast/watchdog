@@ -7,7 +7,6 @@
 #include <linux/watchdog.h>
 
 
-/////////////////////////////////////////////////////////////////////
 /*!
  *      == L I N U X   W A T C H D O G   T I M E R ==
  *
@@ -45,7 +44,7 @@
  *      https://www.kernel.org/doc/Documentation/watchdog/watchdog-api.txt
  *      man (8) wdctl
  *
- *///////////////////////////////////////////////////////////////////
+ */
 
 
 #define WATCHDOG_PATHNAME "/dev/watchdog"
@@ -68,15 +67,18 @@ static int get_watchdog_fd(void)
 }
 
 
-static int watchdog(int fd)
+static void watchdog(int fd)
 {
-    struct watchdog_info ident;
+    struct watchdog_info ident = {0};
     int timeout = -1;
     int pretimeout = -1;
     int timeleft = -1;
     int bootstatus = -1;
 
+    /* Display watchdog device path */
     printf("Device:\t\t%s\n", WATCHDOG_PATHNAME);
+
+    /* Display watchdog identity */
     if (ioctl(fd, WDIOC_GETSUPPORT, &ident) == 0) {
         printf("Identity:\t%s [version %d]\n", ident.identity, ident.firmware_version);
     } else {
@@ -111,7 +113,7 @@ static int watchdog(int fd)
         print_err("Error: Cannot read watchdog boot status: %s\n", strerror(errno));
     }
 
-    return 0;
+    return;
 }
 
 
@@ -129,7 +131,8 @@ static int entry()
      * that we intend to close/stop the watchdog. Otherwise, debug message
      * 'Watchdog timer closed unexpectedly' will be printed in dmesg
      */
-    write(fd, "V", 1);
+    if (write(fd, "V", 1) != 1)
+        print_err("%s", "Watchdog closed unexpectedly\n");
 
     close(fd);
 

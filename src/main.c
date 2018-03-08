@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/watchdog.h>
-
-
 /*!
  *      == L I N U X   W A T C H D O G   T I M E R ==
  *
@@ -47,6 +38,15 @@
  */
 
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/watchdog.h>
+
+
 #define WATCHDOG_PATHNAME "/dev/watchdog"
 
 #define print_err(format, ...) \
@@ -55,9 +55,7 @@
 
 static int get_watchdog_fd(void)
 {
-    int fd = -1;
-
-    fd = open(WATCHDOG_PATHNAME, O_RDWR);
+    int fd = open(WATCHDOG_PATHNAME, O_RDWR);
     if (fd == -1) {
         print_err("Unable to open %s: %s.\n", WATCHDOG_PATHNAME, strerror(errno));
         return -1;
@@ -67,18 +65,13 @@ static int get_watchdog_fd(void)
 }
 
 
-static void watchdog(int fd)
+static void print_watchdog_status(int fd)
 {
-    struct watchdog_info ident = {0};
-    int timeout = -1;
-    int pretimeout = -1;
-    int timeleft = -1;
-    int bootstatus = -1;
-
     /* Display watchdog device path */
     printf("Device:\t\t%s\n", WATCHDOG_PATHNAME);
 
     /* Display watchdog identity */
+    struct watchdog_info ident = {0};
     if (ioctl(fd, WDIOC_GETSUPPORT, &ident) == 0) {
         printf("Identity:\t%s [version %d]\n", ident.identity, ident.firmware_version);
     } else {
@@ -86,6 +79,7 @@ static void watchdog(int fd)
     }
 
     /* Display current watchdog timeout */
+    int timeout = -1;
     if (ioctl(fd, WDIOC_GETTIMEOUT, &timeout) == 0) {
         printf("Timeout: \t%d seconds\n", timeout);
     } else {
@@ -93,6 +87,7 @@ static void watchdog(int fd)
     }
 
     /* Display current watchdog pre-timeout */
+    int pretimeout = -1;
     if (ioctl(fd, WDIOC_GETPRETIMEOUT, &pretimeout) == 0) {
         printf("Pre-timeout: \t%d seconds\n", pretimeout);
     } else {
@@ -100,6 +95,7 @@ static void watchdog(int fd)
     }
 
     /* Display current watchdog timeleft */
+    int timeleft = -1;
     if (ioctl(fd, WDIOC_GETTIMELEFT, &timeleft) == 0) {
         printf("Timeleft: \t%d seconds\n", timeleft);
     } else {
@@ -107,6 +103,7 @@ static void watchdog(int fd)
     }
 
     /* Check if last boot is caused by watchdog */
+    int bootstatus = -1;
     if (ioctl(fd, WDIOC_GETBOOTSTATUS, &bootstatus) == 0) {
         printf("Last boot: \t%s\n", (bootstatus != 0) ? "Watchdog" : "Power-On-Reset");
     } else {
@@ -119,13 +116,11 @@ static void watchdog(int fd)
 
 static int entry()
 {
-    int fd = -1;
-
-    fd = get_watchdog_fd();
+    int fd = get_watchdog_fd();
     if (fd == -1)
         return -1;
 
-    watchdog(fd);
+    print_watchdog_status(fd);
 
     /* The 'V' value needs to be written into watchdog device file to indicate
      * that we intend to close/stop the watchdog. Otherwise, debug message

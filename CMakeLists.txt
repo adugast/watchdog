@@ -13,5 +13,6 @@ set(CMAKE_C_FLAGS "-W -Wall -Werror -pedantic")
 add_executable(
     watchdog
     src/main.c
+    src/watchdog.c
 )
 

@@ -36,16 +36,16 @@ static int _fill_watchdog_info(int wfd, struct wdinfo *info)
     memcpy(info->identity, ident.identity, 32);
 
     /* Get watchdog current timeout */
-    if (ioctl(wfd, WDIOC_GETTIMEOUT, info->timeout) == -1)
+    if (ioctl(wfd, WDIOC_GETTIMEOUT, &(info->timeout)) == -1)
         print_err("Error: Cannot read watchdog timeout: %s\n", strerror(errno));
     /* Get watchdog current pre-timeout */
-    if (ioctl(wfd, WDIOC_GETPRETIMEOUT, info->pretimeout) == -1)
+    if (ioctl(wfd, WDIOC_GETPRETIMEOUT, &(info->pretimeout)) == -1)
         print_err("Error: Cannot read watchdog pretimeout: %s\n", strerror(errno));
     /* Get watchdog current timeleft */
-    if (ioctl(wfd, WDIOC_GETTIMELEFT, info->timeleft) == -1)
+    if (ioctl(wfd, WDIOC_GETTIMELEFT, &(info->timeleft)) == -1)
         print_err("Error: Cannot read watchdog timeleft: %s\n", strerror(errno));
     /* Get watchdog current bootstatus */
-    if (ioctl(wfd, WDIOC_GETBOOTSTATUS, info->bootstatus) == -1)
+    if (ioctl(wfd, WDIOC_GETBOOTSTATUS, &(info->bootstatus)) == -1)
         print_err("Error: Cannot read watchdog boot status: %s\n", strerror(errno));
 
     return 0;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*!
  *      == L I N U X   W A T C H D O G   T I M E R ==
  *
@@ -130,13 +131,43 @@ static int entry()
         print_err("%s", "Watchdog closed unexpectedly\n");
 
     close(fd);
+=======
+#include <stdio.h>
+
+#include "watchdog.h"
+
+
+static void dump_watchdog_info(struct wdinfo *info)
+{
+    printf("Device:\t\t%s\n", WATCHDOG_PATHNAME);
+    printf("Identity:\t%s [version %d]\n", info->identity, info->firmware_version);
+    printf("Timeout: \t%d seconds\n", info->timeout);
+    printf("Pre-timeout: \t%d seconds\n", info->pretimeout);
+    printf("Timeleft: \t%d seconds\n", info->timeleft);
+    printf("Last boot: \t%s\n", (info->bootstatus != 0) ? "Watchdog" : "Power-On-Reset");
+}
+
+
+int main()
+{
+    struct wdinfo info;
+    if (wd_getinfo(&info) == -1) {
+        printf("wd_getinfo() failed\n");
+        return -1;
+    }
+
+    dump_watchdog_info(&info);
+>>>>>>> f46d8b70a612d1463454a00897ef6fef26906462
 
     return 0;
 }
 
+<<<<<<< HEAD
 
 int main()
 {
     entry();
     return 0;
 }
+=======
+>>>>>>> f46d8b70a612d1463454a00897ef6fef26906462

@@ -11,7 +11,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Werror -pedantic")
 
 ## set the target name and source
 add_executable(
-    watchdog
+    watchdog-manager
     src/main.c
     src/watchdog.c
 )

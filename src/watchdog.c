@@ -67,11 +67,25 @@ int wd_getinfo(struct wdinfo *info)
      * that we intend to close/stop the watchdog. Otherwise, debug message
      * 'Watchdog timer closed unexpectedly' will be printed in dmesg
      */
-    if (write(wfd, "V", 1) != 1)
+    if (write(wfd, "V", 1) != 1) {
         print_err("%s", "Watchdog closed unexpectedly\n");
+        return -1;
+    }
 
     close(wfd);
 
     return 0;
 }
 
+int wd_settimeout(int timeout) {
+    int wfd = _get_watchdog_fd();
+    if (wfd == -1)
+        return -1;
+
+    if (ioctl(wfd, WDIOC_SETTIMEOUT, &timeout) == -1) {
+        print_err("Error: Could not set timeout: %s\n", strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}

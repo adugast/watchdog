@@ -76,7 +76,17 @@ struct wdinfo {
  * \return -1 on error, 0 on success
  */
 int wd_getinfo(struct wdinfo *info);
-
+/*!
+ * \brief Set watchdog timeout
+ *
+ * Change the watchdog timeout value
+ * default path: "/dev/watchdog"
+ *
+ * \param   timeout    Watchdog timeout in seconds
+ *
+ * \return -1 on error, 0 on success
+ */
+int wd_settimeout(int timeout);
 
 #ifdef __cplusplus
 }

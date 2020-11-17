@@ -20,4 +20,4 @@ add_executable(
 include(GNUInstallDirs)
 
 # Set the location for executable installation
-install(TARGETS watchdog DESTINATION ${BINDIR})
+install(TARGETS watchdog-manager DESTINATION ${BINDIR})

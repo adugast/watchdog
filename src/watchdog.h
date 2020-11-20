@@ -53,6 +53,8 @@ extern "C"
 
 #define WATCHDOG_PATHNAME "/dev/watchdog"
 
+#define DATA_ERROR -100
+
 
 struct wdinfo {
     uint32_t options;           /* Options the card/driver support */

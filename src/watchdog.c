@@ -37,13 +37,22 @@ static int _fill_watchdog_info(int wfd, struct wdinfo *info)
 
     /* Get watchdog current timeout */
     if (ioctl(wfd, WDIOC_GETTIMEOUT, &(info->timeout)) == -1)
+    {
+        info->timeout = DATA_ERROR;
         print_err("Error: Cannot read watchdog timeout: %s\n", strerror(errno));
+    }
     /* Get watchdog current pre-timeout */
     if (ioctl(wfd, WDIOC_GETPRETIMEOUT, &(info->pretimeout)) == -1)
+    {
+        info->pretimeout = DATA_ERROR;
         print_err("Error: Cannot read watchdog pretimeout: %s\n", strerror(errno));
+    }
     /* Get watchdog current timeleft */
     if (ioctl(wfd, WDIOC_GETTIMELEFT, &(info->timeleft)) == -1)
+    {
+        info->timeleft = DATA_ERROR;
         print_err("Error: Cannot read watchdog timeleft: %s\n", strerror(errno));
+    }
     /* Get watchdog current bootstatus */
     if (ioctl(wfd, WDIOC_GETBOOTSTATUS, &(info->bootstatus)) == -1)
         print_err("Error: Cannot read watchdog boot status: %s\n", strerror(errno));
@@ -67,11 +76,25 @@ int wd_getinfo(struct wdinfo *info)
      * that we intend to close/stop the watchdog. Otherwise, debug message
      * 'Watchdog timer closed unexpectedly' will be printed in dmesg
      */
-    if (write(wfd, "V", 1) != 1)
+    if (write(wfd, "V", 1) != 1) {
         print_err("%s", "Watchdog closed unexpectedly\n");
+        return -1;
+    }
 
     close(wfd);
 
     return 0;
 }
 
+int wd_settimeout(int timeout) {
+    int wfd = _get_watchdog_fd();
+    if (wfd == -1)
+        return -1;
+
+    if (ioctl(wfd, WDIOC_SETTIMEOUT, &timeout) == -1) {
+        print_err("Error: Could not set timeout: %s\n", strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}
